@@ -11,7 +11,7 @@
 <title>Gym — журнал тренувань</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --deep:#0f0f10;--bg:#141415;--card:#19191b;--raised:#232325;
@@ -20,6 +20,7 @@
   --acc:#f0913a;--acc-ink:#141415;--pos:#4cc38a;--neg:#e5484d;
   --ease:cubic-bezier(.22,1,.36,1);
   --sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --disp:"Bricolage Grotesque","Geist",-apple-system,sans-serif;
   --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
@@ -128,16 +129,45 @@ details summary{cursor:pointer;color:var(--text2);font-size:13px;line-height:20p
 .datef button{min-height:44px;width:44px;padding:0}
 .datef .dpick{position:absolute;left:0;bottom:0;width:1px;height:1px;min-height:0;opacity:0;pointer-events:none;border:0;padding:0}
 input.bad-in{border-color:var(--neg)}
+header h1{display:flex;align-items:center;gap:8px}
+header h1 svg.i{color:var(--acc)}
+.disp{font-family:var(--disp);font-variant-numeric:tabular-nums}
+.today{padding:16px 16px 20px;overflow:hidden}
+.today-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.day-l{font-size:13px;line-height:20px;color:var(--text2);margin-top:12px}
+.day-big{font-family:var(--disp);font-size:80px;line-height:72px;font-weight:500;letter-spacing:-.03em;margin:0 0 8px -4px}
+.plate-wrap{flex:none;width:132px;text-align:center;margin:-4px -4px 0 0}
+.plate{width:132px;height:132px;display:block;transform:rotate(-8deg);filter:drop-shadow(0 8px 16px rgba(0,0,0,.35))}
+.pl-n{font-family:var(--disp);font-weight:600;font-size:15px;fill:#ededed;letter-spacing:-.01em}
+.pl-u{font-family:var(--mono);font-size:8px;fill:#85858b;letter-spacing:.1em}
+.plate-cap{font-family:var(--mono);font-size:11px;line-height:16px;color:var(--muted);margin-top:4px}
+.prog{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:16px}
+.prog i{height:8px;border-radius:2px;background:var(--raised)}
+.prog i.past{background:rgba(237,237,237,.32)}
+.prog i.dl{background:repeating-linear-gradient(135deg,rgba(237,237,237,.28) 0 2px,transparent 2px 4px);box-shadow:inset 0 0 0 1px var(--line2)}
+.prog i.dl.past{background:repeating-linear-gradient(135deg,rgba(237,237,237,.5) 0 2px,transparent 2px 4px)}
+.prog i.cur{background:var(--acc)}
+.prog-l{display:flex;justify-content:space-between;margin-top:8px}
+.wk{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.wk-dots{display:flex;gap:4px}
+.dkey{width:40px;height:40px;flex:none;border:1px solid var(--line2);border-radius:8px;display:grid;place-items:center;font-family:var(--disp);font-size:20px;font-weight:500;background:var(--bg);box-shadow:inset 0 -2px 0 rgba(0,0,0,.4)}
+.hist-head{display:flex;gap:12px;align-items:center;flex:1;min-width:0}
+.fig{font-family:var(--disp)}
+.pr{font-family:var(--mono);font-size:10px;line-height:14px;color:var(--acc);border:1px solid rgba(240,145,58,.45);border-radius:4px;padding:0 4px;margin-left:4px;vertical-align:1px}
+.timer[hidden]{display:none}
+table.nw td,table.nw th{white-space:nowrap}
+#timerBar{position:absolute;left:0;top:-1px;height:2px;width:0;background:var(--acc);transition:width .25s linear}
+
 </style>
 </head>
 <body>
 <header>
-  <h1>Gym</h1>
+  <h1><span data-ic="dumbbell"></span>Gym</h1>
   <div class="meta" id="weekBadge"></div>
 </header>
 <main id="view"></main>
 <div class="timer" id="timer" hidden>
-  <span class="t" id="timerT">0:00</span>
+  <i id="timerBar"></i><span class="t" id="timerT">0:00</span>
   <button class="sm" data-timer="60">1:00</button>
   <button class="sm" data-timer="90">1:30</button>
   <button class="sm" data-timer="120">2:00</button>
@@ -305,7 +335,7 @@ $('#nav').addEventListener('click', e => { const b = e.target.closest('button');
 
 function render() {
   const wk = weekOf(today());
-  $('#weekBadge').textContent = `Тиждень ${wk} · ${phase(wk).name}`;
+  $('#weekBadge').textContent = `Тиждень ${wk} з 12 · ${phase(wk).name}`;
   const showTimer = tab === 'workout';
   $('#timer').hidden = !showTimer;
   document.body.classList.toggle('has-timer', showTimer);
@@ -322,16 +352,52 @@ function backupBanner() {
 }
 
 /* ====== Тренування ====== */
+function plate(w) {
+  return `<svg class="plate" viewBox="0 0 132 132" aria-hidden="true"><defs>
+    <radialGradient id="plRub" cx="38%" cy="32%" r="78%"><stop offset="0" stop-color="#f7a865"/><stop offset=".5" stop-color="#e5832f"/><stop offset="1" stop-color="#9c4d17"/></radialGradient>
+    <radialGradient id="plIron" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#404044"/><stop offset="1" stop-color="#1b1b1d"/></radialGradient></defs>
+    <circle cx="66" cy="66" r="62" fill="url(#plRub)"/>
+    <circle cx="66" cy="66" r="61.5" fill="none" stroke="#000" stroke-opacity=".3"/>
+    <circle cx="66" cy="66" r="56" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="1.5"/>
+    <circle cx="66" cy="66" r="47" fill="url(#plIron)"/>
+    <circle cx="66" cy="66" r="47" fill="none" stroke="#fff" stroke-opacity=".1"/>
+    <circle cx="66" cy="66" r="31" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="1.5"/>
+    <circle cx="66" cy="66" r="32" fill="none" stroke="#fff" stroke-opacity=".07"/>
+    <circle cx="66" cy="66" r="10" fill="#0c0c0d"/><circle cx="66" cy="66" r="10" fill="none" stroke="#fff" stroke-opacity=".14"/>
+    <text x="66" y="48" text-anchor="middle" class="pl-n">${esc(w)}</text>
+    <text x="66" y="92" text-anchor="middle" class="pl-u">КГ</text></svg>`;
+}
+function thisWeekCount() {
+  const m = mondayOf(today());
+  return S.workouts.filter(w => w.date >= m && daysBetween(m, w.date) < 7).length;
+}
+function todayCard(wk, ph, sug) {
+  const e0 = PROGRAM[D.day][0];
+  const s0 = (D.ex[e0.slot] || [])[0];
+  const sg = suggest(e0, lastFor(e0.slot, D.editId));
+  const w = s0 && String(s0.w).trim() ? s0.w : sg.w !== '' ? fmt(sg.w) : '—';
+  const done = thisWeekCount();
+  const segs = Array.from({ length: 12 }, (_, i) => { const n = i + 1;
+    return `<i class="${n === 9 ? 'dl ' : ''}${n < wk ? 'past' : n === wk ? 'cur' : ''}" title="Тиждень ${n}"></i>`; }).join('');
+  return `<div class="card today"><div class="today-top"><div>
+      <div class="meta">Тиждень ${wk} з 12 · ${esc(ph.name)}</div>
+      <div class="day-l">День</div><div class="day-big">${D.day}</div>
+      <div class="sub">${esc(ph.tip)}</div></div>
+      <div class="plate-wrap">${plate(w)}<div class="plate-cap">${e0.slot} · робоча вага</div></div></div>
+    <div class="prog" aria-label="12 тижнів програми">${segs}</div>
+    <div class="prog-l meta"><span>Тиждень 1</span><span>9 · розвантаження</span><span>12</span></div>
+    <div class="wk"><div class="wk-dots">${[1, 2, 3].map(n => `<span class="k${n <= done ? ' on' : ''}">${n}</span>`).join('')}</div>
+      <div class="meta" style="text-align:right">Цього тижня ${Math.min(done, 99)} з 3 · RIR ${ph.rir}, ізол. ${ph.isoRir}</div></div>
+    <div class="field-row"><div><label>Дата</label>${dateField('wDate', D.date)}</div>
+      <div class="sub pad">${D.editId ? 'Редагування збереженого тренування' : sug === D.day ? 'За чергою день ' + sug : 'За чергою був день ' + sug}</div></div></div>`;
+}
 function rWorkout() {
   if (!D) newDraft(nextDay());
   const wk = weekOf(D.date), ph = phase(wk), sug = nextDay();
   const ex = PROGRAM[D.day];
   let h = backupBanner();
   h += `<div class="seg">${'ABC'.split('').map(d => `<button data-act="day" data-day="${d}" class="${d === D.day ? 'on' : ''}">День ${d}${d === sug && d !== D.day ? '<span class="next">далі</span>' : ''}</button>`).join('')}</div>`;
-  h += `<div class="card"><div class="row between top"><div><h3>Тиждень ${wk} · ${esc(ph.name)}</h3><div class="sub">${esc(ph.tip)}</div></div>
-        <div class="meta" style="text-align:right;white-space:nowrap">RIR ${ph.rir}<br>ізол. ${ph.isoRir}</div></div>
-        <div class="field-row"><div><label>Дата</label>${dateField('wDate', D.date)}</div>
-        <div class="sub pad">${D.editId ? 'Редагування збереженого тренування' : sug === D.day ? 'За чергою день ' + sug : 'За чергою був день ' + sug}</div></div></div>`;
+  h += todayCard(wk, ph, sug);
   ex.forEach((e, i) => {
     const sets = D.ex[e.slot] || (D.ex[e.slot] = []);
     const last = lastFor(e.slot, D.editId);
@@ -378,6 +444,7 @@ $('#view').addEventListener('input', e => {
     if (t.dataset.slot) {
       const s = D.ex[t.dataset.slot][+t.dataset.i];
       s[t.dataset.f] = t.value;
+      if (t.dataset.f === 'w' && t.dataset.i === '0' && t.dataset.slot === PROGRAM[D.day][0].slot) { const pn = document.querySelector('.pl-n'); if (pn) pn.textContent = t.value.trim() || '—'; }
       if (t.dataset.f === 'r') { const k = document.querySelector(`.k[data-k="${t.dataset.slot}-${t.dataset.i}"]`); if (k) k.classList.toggle('on', t.value.trim() !== ''); }
       saveDraft();
     } else if (t.id === 'wNote') { D.note = t.value; saveDraft(); }
@@ -451,8 +518,8 @@ function rHistory() {
   for (const x of w) {
     const vol = x.ex.reduce((a, e) => a + e.sets.reduce((b, s) => b + (s.w || 0) * s.r, 0), 0);
     const sets = x.ex.reduce((a, e) => a + e.sets.length, 0);
-    h += `<div class="card"><div class="row between top"><div><h3>${dfmt(x.date)} · День ${x.day}</h3>
-          <div class="meta">Тиждень ${x.week} · ${sets} підх. · ${fmtInt(vol)} кг</div></div>
+    h += `<div class="card"><div class="row between top"><div class="hist-head"><div class="dkey" aria-label="День ${x.day}">${x.day}</div><div><h3>${dfmt(x.date)}</h3>
+          <div class="meta">Тиждень ${x.week} · ${sets} підх. · ${fmtInt(vol)} кг</div></div></div>
           <div class="row tight"><button class="icon" data-act="editW" data-id="${x.id}" aria-label="Редагувати">${ic('pencil')}</button><button class="icon del" data-act="delW" data-id="${x.id}" aria-label="Видалити">${ic('trash')}</button></div></div>
           <div class="hist">${x.ex.map(e => `<div class="hist-ex"><span>${esc(e.name)}</span><span class="mono">${e.sets.map(s => (s.w ? fmt(s.w) + '×' : '') + s.r).join(' ')}</span></div>`).join('')}</div>
           ${x.note ? `<div class="note-line">${ic('notebook-pen')}<span>${esc(x.note)}</span></div>` : ''}</div>`;
@@ -475,7 +542,9 @@ function delWorkout(id) {
 }
 
 /* ====== Графік ====== */
-function chart(pts, unit) {
+let chartN = 0;
+function prIdx(pts) { const set = new Set(); let mx = -Infinity; pts.forEach((p, i) => { if (i > 0 && p.y > mx) set.add(i); mx = Math.max(mx, p.y); }); return set; }
+function chart(pts, unit, markPR) {
   if (pts.length < 2) return '<div class="sub mt12">Для графіка потрібно щонайменше 2 записи</div>';
   const W = 340, H = 180, pl = 36, pr = 8, pt = 8, pb = 24;
   const ys = pts.map(p => p.y); let mn = Math.min(...ys), mx = Math.max(...ys);
@@ -490,11 +559,11 @@ function chart(pts, unit) {
   const T = 'style="font-family:var(--mono);fill:var(--muted)" font-size="10"';
   const grid = [0, 0.5, 1].map(f => { const v = mn + (mx - mn) * f; const y = Y(v).toFixed(1);
     return `<line x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}" style="stroke:var(--line)"/><text x="${pl - 6}" y="${+y + 3}" ${T} text-anchor="end">${fmt(r1(v))}</text>`; }).join('');
-  const lp = pts[pts.length - 1];
-  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Графік">${grid}
-    <path d="${area}" style="fill:var(--acc)" opacity=".1"/>
+  const lp = pts[pts.length - 1], gid = 'ag' + (++chartN), prs = markPR ? prIdx(pts) : new Set();
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Графік"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0913a" stop-opacity=".24"/><stop offset="1" stop-color="#f0913a" stop-opacity="0"/></linearGradient></defs>${grid}
+    <path d="${area}" fill="url(#${gid})"/>
     <polyline points="${xy.join(' ')}" fill="none" style="stroke:var(--acc)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-    ${pts.slice(0, -1).map(p => `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="2" style="fill:var(--acc)" opacity=".55"><title>${dfmt(p.x)}: ${fmt(p.y)} ${unit}</title></circle>`).join('')}
+    ${pts.slice(0, -1).map((p, i) => prs.has(i) ? `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="3.5" style="fill:var(--card);stroke:var(--acc)" stroke-width="1.5"><title>Рекорд · ${dfmt(p.x)}: ${fmt(p.y)} ${unit}</title></circle>` : `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="2" style="fill:var(--acc)" opacity=".55"><title>${dfmt(p.x)}: ${fmt(p.y)} ${unit}</title></circle>`).join('')}
     <circle cx="${X(lp.x).toFixed(1)}" cy="${Y(lp.y).toFixed(1)}" r="4" style="fill:var(--acc);stroke:var(--card)" stroke-width="2"><title>${dfmt(lp.x)}: ${fmt(lp.y)} ${unit}</title></circle>
     <text x="${pl}" y="${H - 6}" ${T}>${dfmt(pts[0].x)}</text>
     <text x="${W - pr}" y="${H - 6}" ${T} text-anchor="end">${dfmt(lp.x)}</text></svg>`;
@@ -523,11 +592,13 @@ function rProgress() {
   const bw = exDef.bw || rows.every(r => !r.best.w);
   const pts = rows.map(r => ({ x: r.date, y: bw ? r.reps : r1(r.e1) }));
   const unit = bw ? 'повт.' : 'кг';
+  const prs = prIdx(pts), prCount = prs.size;
+  rows.forEach((r, i) => { r.pr = prs.has(i); });
   $('#view').innerHTML = `<div class="card"><label for="pSel">Вправа</label><select id="pSel">${ids.map(id => `<option value="${id}" ${id === progSel ? 'selected' : ''}>${esc(ALL_EX.get(id).name.replace(/ \(.*\)$/, ''))}</option>`).join('')}</select></div>
-    <div class="card">${statBlock(bw ? 'Повторів за тренування' : 'Розрахунковий 1ПМ, одна гантель', pts, unit, true)}${chart(pts, unit)}
+    <div class="card">${statBlock(bw ? 'Повторів за тренування' : 'Розрахунковий 1ПМ, одна гантель', pts, unit, true)}${prCount ? `<div class="chg">Рекордів: ${prCount}</div>` : ''}${chart(pts, unit, true)}
     ${bw ? '' : '<div class="sub">Формула Еплі з поправкою на RIR, тож видно силу навіть при різній кількості повторів</div>'}</div>
-    <div class="card"><table><tr><th>Дата</th><th>Найкращий підхід</th><th class="num">${bw ? 'Повт.' : '1ПМ'}</th><th class="num">Тоннаж</th></tr>
-    ${rows.slice().reverse().map(r => `<tr><td class="d">${dfmt(r.date)} <span class="muted">${r.day}</span></td><td class="d">${r.best.w ? fmt(r.best.w) + '×' : ''}${r.best.r}${r.best.rir != null ? '<span class="muted">@' + r.best.rir + '</span>' : ''}</td><td class="num">${bw ? r.reps : fmt(r1(r.e1))}</td><td class="num">${fmtInt(r.vol)}</td></tr>`).join('')}</table></div>`;
+    <div class="card"><table class="nw"><tr><th>Дата</th><th>Найкращий</th><th class="num">${bw ? 'Повт.' : '1ПМ'}</th><th class="num">Тоннаж</th></tr>
+    ${rows.slice().reverse().map(r => `<tr><td class="d">${dfmt(r.date)} <span class="muted">${r.day}</span></td><td class="d">${r.best.w ? fmt(r.best.w) + '×' : ''}${r.best.r}${r.best.rir != null ? '<span class="muted">@' + r.best.rir + '</span>' : ''}</td><td class="num">${r.pr ? '<span class="pr">PR</span> ' : ''}${bw ? r.reps : fmt(r1(r.e1))}</td><td class="num">${fmtInt(r.vol)}</td></tr>`).join('')}</table></div>`;
 }
 
 /* ====== Тіло ====== */
@@ -629,9 +700,10 @@ function wipe() {
 }
 
 /* ====== Таймер відпочинку ====== */
-let tEnd = 0, tInt = null;
+let tEnd = 0, tInt = null, tTotal = 1;
 function tick() {
   const el = $('#timerT'); const left = Math.ceil((tEnd - Date.now()) / 1000);
+  $('#timerBar').style.width = Math.max(0, (tEnd - Date.now()) / (tTotal * 1000) * 100) + '%';
   if (left <= 0) {
     clearInterval(tInt); tInt = null; el.textContent = 'Готово'; el.className = 't end';
     if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
@@ -643,8 +715,8 @@ function tick() {
 $('#timer').addEventListener('click', e => {
   const b = e.target.closest('[data-timer]'); if (!b) return;
   const s = +b.dataset.timer; clearInterval(tInt); tInt = null;
-  if (!s) { $('#timerT').textContent = '0:00'; $('#timerT').className = 't'; return; }
-  tEnd = Date.now() + s * 1000; tick(); tInt = setInterval(tick, 250);
+  if (!s) { $('#timerT').textContent = '0:00'; $('#timerT').className = 't'; $('#timerBar').style.width = '0'; return; }
+  tTotal = s; tEnd = Date.now() + s * 1000; tick(); tInt = setInterval(tick, 250);
 });
 
 /* ====== Старт ====== */
