@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <defs>
+    <radialGradient id="r" cx="38%" cy="32%" r="78%"><stop offset="0" stop-color="#f7a865"/><stop offset=".5" stop-color="#e5832f"/><stop offset="1" stop-color="#9c4d17"/></radialGradient>
+    <radialGradient id="i" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#404044"/><stop offset="1" stop-color="#1b1b1d"/></radialGradient>
+  </defs>
+  <rect width="180" height="180" fill="#141415"/>
+  <circle cx="90" cy="90" r="66" fill="url(#r)"/>
+  <circle cx="90" cy="90" r="65.5" fill="none" stroke="#000" stroke-opacity=".3"/>
+  <circle cx="90" cy="90" r="59.5" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="1.5"/>
+  <circle cx="90" cy="90" r="50" fill="url(#i)"/>
+  <circle cx="90" cy="90" r="50" fill="none" stroke="#fff" stroke-opacity=".1"/>
+  <circle cx="90" cy="90" r="33" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="1.5"/>
+  <circle cx="90" cy="90" r="34" fill="none" stroke="#fff" stroke-opacity=".07"/>
+  <circle cx="90" cy="90" r="11" fill="#0c0c0d"/>
+  <circle cx="90" cy="90" r="11" fill="none" stroke="#fff" stroke-opacity=".14"/>
+</svg>
