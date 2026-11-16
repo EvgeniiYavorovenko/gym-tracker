@@ -73,6 +73,10 @@ body.has-timer{padding-bottom:calc(126px + env(safe-area-inset-bottom))}
 #toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);background:#2a3340;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;z-index:20;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
 #toast.show{opacity:1}
 .muted{color:var(--muted)}
+.datef{position:relative;display:flex;gap:6px;align-items:stretch}
+.datef .dtext{flex:1;min-width:0}
+.datef .dpick{position:absolute;left:0;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none;border:0;padding:0}
+input.bad-in{border-color:var(--bad)}
 .ok{color:var(--ok)}.bad{color:var(--bad)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
@@ -160,8 +164,18 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function today() { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); }
 const pd = s => new Date(s + 'T00:00:00');
-const ddmm = s => { const [y, m, d] = s.split('-'); return `${d}.${m}`; };
-const ddmmyy = s => { const [y, m, d] = s.split('-'); return `${d}.${m}.${y.slice(2)}`; };
+const dfmt = s => { if (!s) return ''; const [y, m, d] = s.split('-'); return `${d}.${m}.${y}`; };
+const ddmm = dfmt, ddmmyy = dfmt;
+// Розбір дд.мм.рррр → yyyy-mm-dd (або null)
+function parseDMY(str) {
+  const m = String(str || '').trim().match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/); if (!m) return null;
+  const d = +m[1], mo = +m[2], y = +m[3]; const dt = new Date(y, mo - 1, d);
+  if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
+  return `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+}
+// Поле дати у форматі дд.мм.рррр + кнопка календаря (нативний вибір прихований)
+const dateField = (id, iso) => `<div class="datef"><input id="${id}" class="dtext" inputmode="numeric" maxlength="10" placeholder="дд.мм.рррр" value="${dfmt(iso)}" autocomplete="off"><button type="button" class="sm" data-pick="${id}" aria-label="Календар">📅</button><input type="date" class="dpick" data-for="${id}" value="${iso || ''}" tabindex="-1" aria-hidden="true"></div>`;
+const isoOf = id => parseDMY($('#' + id).value);
 const daysBetween = (a, b) => Math.round((pd(b) - pd(a)) / 864e5);
 const num = v => { const n = parseFloat(String(v).replace(',', '.')); return isFinite(n) ? n : null; };
 const fmt = n => (Math.round(n * 100) / 100).toString().replace('.', ',');
@@ -263,7 +277,7 @@ function rWorkout() {
   let h = backupBanner();
   h += `<div class="days">${'ABC'.split('').map(d => `<button data-act="day" data-day="${d}" class="${d === D.day ? 'on' : d === sug ? 'sug' : ''}">День ${d}</button>`).join('')}</div>`;
   h += `<div class="card phase"><div class="row between"><div><b>Тиждень ${wk} · ${esc(ph.name)}</b><div class="sub">RIR ${ph.rir} (ізоляція ${ph.isoRir}). ${esc(ph.tip)}</div></div></div>
-        <div class="grid2" style="margin-top:10px"><div><label>Дата</label><input type="date" id="wDate" value="${D.date}"></div>
+        <div class="grid2" style="margin-top:10px"><div><label>Дата</label>${dateField('wDate', D.date)}</div>
         <div><label>&nbsp;</label><div class="sub">${D.editId ? '✏️ Редагування збереженого тренування' : sug === D.day ? 'За чергою: день ' + sug : 'За чергою був день ' + sug}</div></div></div></div>`;
   ex.forEach((e, i) => {
     const sets = D.ex[e.slot] || (D.ex[e.slot] = []);
@@ -290,8 +304,23 @@ function rWorkout() {
   $('#view').innerHTML = h;
 }
 
+function applyDate(id, iso) {
+  if (id === 'wDate' && D && iso !== D.date) { D.date = iso; saveDraft(); render(); }
+}
 $('#view').addEventListener('input', e => {
   const t = e.target;
+  if (t.classList.contains('dtext')) {
+    const dg = t.value.replace(/\D/g, '').slice(0, 8);
+    t.value = dg.length > 4 ? `${dg.slice(0, 2)}.${dg.slice(2, 4)}.${dg.slice(4)}` : dg.length > 2 ? `${dg.slice(0, 2)}.${dg.slice(2)}` : dg;
+    const iso = parseDMY(t.value);
+    t.classList.toggle('bad-in', t.value.length === 10 && !iso);
+    if (iso) { const pk = document.querySelector(`.dpick[data-for="${t.id}"]`); if (pk) pk.value = iso; applyDate(t.id, iso); }
+    return;
+  }
+  if (t.classList.contains('dpick')) {
+    const txt = $('#' + t.dataset.for); if (t.value && txt) { txt.value = dfmt(t.value); txt.classList.remove('bad-in'); applyDate(txt.id, t.value); }
+    return;
+  }
   if (tab === 'workout' && D) {
     if (t.dataset.slot) {
       const s = D.ex[t.dataset.slot][+t.dataset.i];
@@ -299,7 +328,6 @@ $('#view').addEventListener('input', e => {
       if (t.dataset.f === 'r') t.classList.toggle('done', t.value.trim() !== '');
       saveDraft();
     } else if (t.id === 'wNote') { D.note = t.value; saveDraft(); }
-    else if (t.id === 'wDate' && t.value) { D.date = t.value; saveDraft(); render(); }
   }
 });
 // Після введення ваги в 1-му підході — підставляємо її в порожні наступні
@@ -314,6 +342,9 @@ $('#view').addEventListener('change', e => {
 });
 
 $('#view').addEventListener('click', e => {
+  const pb = e.target.closest('[data-pick]');
+  if (pb) { const pk = document.querySelector(`.dpick[data-for="${pb.dataset.pick}"]`); const iso = isoOf(pb.dataset.pick); if (iso) pk.value = iso;
+    try { pk.showPicker(); } catch (err) { pk.focus(); pk.click(); } return; }
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act;
   if (a === 'day') {
@@ -338,7 +369,7 @@ $('#view').addEventListener('click', e => {
   else if (a === 'delW') delWorkout(b.dataset.id);
   else if (a === 'saveBody') saveBody();
   else if (a === 'delBody') { S.body = S.body.filter(x => x.date !== b.dataset.date); save(); render(); }
-  else if (a === 'saveStart') { const v = $('#startDate').value; if (v) { S.settings.startDate = v; save(); toast('Дату старту збережено'); render(); } }
+  else if (a === 'saveStart') { const v = isoOf('startDate'); if (!v) { toast('Введи дату у форматі дд.мм.рррр'); return; } { S.settings.startDate = v; save(); toast('Дату старту збережено'); render(); } }
 });
 $('#view').addEventListener('change', e => { if (e.target.id === 'pSel') { progSel = e.target.value; render(); } if (e.target.id === 'importFile') importData(e.target.files[0]); });
 
@@ -438,7 +469,7 @@ function rBody() {
   const b = [...S.body].sort((x, y) => x.date < y.date ? -1 : 1);
   const t = b.find(x => x.date === today());
   let h = `<div class="card"><h3>Новий запис</h3><div class="sub" style="margin-bottom:8px">Вага — щоранку натщесерце. Талія — раз на тиждень на рівні пупка.</div>
-    <div class="grid3"><div><label>Дата</label><input type="date" id="bDate" value="${today()}"></div>
+    <div><label>Дата</label>${dateField('bDate', today())}</div><div style="height:8px"></div><div class="grid2">
     <div><label>Вага, кг</label><input id="bW" inputmode="decimal" value="${t && t.weight != null ? fmt(t.weight) : ''}" placeholder="90,0"></div>
     <div><label>Талія, см</label><input id="bT" inputmode="decimal" value="${t && t.waist != null ? fmt(t.waist) : ''}" placeholder="—"></div></div>
     <div style="height:10px"></div><button class="pri wide" data-act="saveBody">Зберегти</button></div>`;
@@ -460,7 +491,7 @@ function rBody() {
   $('#view').innerHTML = h;
 }
 function saveBody() {
-  const date = $('#bDate').value || today(), w = num($('#bW').value), t = num($('#bT').value);
+  const date = isoOf('bDate') || today(), w = num($('#bW').value), t = num($('#bT').value);
   if (w == null && t == null) { toast('Введи вагу або талію'); return; }
   const ex = S.body.find(x => x.date === date);
   if (ex) { if (w != null) ex.weight = w; if (t != null) ex.waist = t; }
@@ -473,7 +504,7 @@ function rSettings() {
   const size = ((localStorage.getItem(KEY) || '').length * 2 / 1024).toFixed(1);
   const le = S.settings.lastExport;
   let h = backupBanner() + `<div class="card"><h3>Старт програми</h3><div class="sub" style="margin-bottom:8px">Від цієї дати рахуються тижні й фази (повернення → основна → розвантаження → інтенсифікація).</div>
-    <div class="row"><input type="date" id="startDate" value="${S.settings.startDate}" style="flex:1"><button data-act="saveStart">Зберегти</button></div></div>
+    <div class="row"><div style="flex:1">${dateField('startDate', S.settings.startDate)}</div><button data-act="saveStart">Зберегти</button></div></div>
     <div class="card"><h3>Резервна копія</h3>
       <div class="sub">Остання: ${le ? ddmmyy(le) : 'ще не було'} · тренувань: ${S.workouts.length} · записів тіла: ${S.body.length} · обсяг ≈ ${size} КБ</div>
       <div style="height:10px"></div>
