@@ -128,8 +128,11 @@ details summary{cursor:pointer;color:var(--text2);font-size:13px;line-height:20p
 .mt12{margin-top:12px}
 .datef{position:relative;display:flex;gap:8px;align-items:stretch}
 .datef .dtext{flex:1;min-width:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
-.datef button{min-height:44px;width:44px;padding:0}
-.datef .dpick{position:absolute;left:0;bottom:0;width:1px;height:1px;min-height:0;opacity:0;pointer-events:none;border:0;padding:0}
+.pickbtn{position:relative;flex:none;width:44px;min-height:44px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:var(--raised);color:var(--text);cursor:pointer;overflow:hidden;transition:background-color .15s var(--ease)}
+.pickbtn:hover{background:#2a2a2d}
+.pickbtn:focus-within{outline:2px solid rgba(240,145,58,.7);outline-offset:1px}
+.pickbtn .dpick{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;padding:0;border:0;opacity:0;font-size:16px;cursor:pointer;-webkit-appearance:none;appearance:none;background:transparent;color:transparent}
+.pickbtn .dpick::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;opacity:0;cursor:pointer}
 input.bad-in{border-color:var(--neg)}
 header h1{display:flex;align-items:center;gap:8px}
 .mark{width:22px;height:22px;flex:none}
@@ -175,6 +178,66 @@ header h1{display:flex;align-items:center;gap:8px}
 .empty svg{display:block;margin:0 auto 12px}
 .empty .sub{margin-top:4px;color:var(--muted)}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}}
+.hdr-r{display:flex;align-items:center;gap:4px;min-width:0}
+.hdr-r .meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header button.icon.on{color:var(--acc)}
+/* Добавки */
+.sp-day{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;gap:8px}
+.sp-day>div{text-align:center}
+.sp-day h3{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+button.icon:disabled{opacity:.3;cursor:default}
+button.icon:disabled:hover{background:transparent;color:var(--muted)}
+.blister{margin-top:16px;padding:12px 8px 8px;border-radius:12px;background:linear-gradient(180deg,#2c2c2f,#242427);border:1px solid var(--line2);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 16px rgba(0,0,0,.25);display:grid;grid-template-columns:repeat(5,1fr);gap:4px;position:relative}
+.blister::before{content:"";position:absolute;inset:6px;border-radius:8px;border:1px dashed rgba(237,237,237,.07);pointer-events:none}
+.bl{background:none;border:0;border-radius:8px;padding:0 0 4px;min-height:0;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text2);font-weight:400}
+.bl:hover{background:rgba(255,255,255,.03)}
+.bl svg{width:56px;height:56px;display:block;overflow:visible}
+.bl span{font-size:12px;line-height:16px;white-space:nowrap}
+.bl.taken span{color:var(--muted)}
+.bl .pill,.bl .dome{transform-box:fill-box;transform-origin:center}
+.bl.taken .pill,.bl.taken .dome{opacity:0}
+.bl .tear{opacity:0}
+.bl.taken .tear{opacity:1}
+.bl.pop .pill{animation:pillOut .4s var(--ease) both}
+.bl.pop .dome{animation:fadeOut .2s var(--ease) both}
+.bl.pop .tear{animation:fadeIn .25s .1s var(--ease) both}
+.bl.off{opacity:.45}
+@keyframes pillOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-12px) scale(.8)}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sp-sum{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;min-height:32px}
+.sp-g{margin:20px 4px 8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sp-g h4{margin:0;font-size:13px;line-height:20px;font-weight:500;color:var(--text2)}
+.sp-list{padding:4px 16px}
+.sp-row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.sp-row:last-child{border-bottom:0}
+.sp-main{flex:1;min-width:0}
+.sp-name{font-size:15px;line-height:22px;font-weight:500}
+.sp-dose{font-family:var(--mono);font-size:13px;line-height:20px;color:var(--text);margin-top:2px}
+.sp-row .note{margin-top:2px}
+.sp-row .up{font-size:13px;line-height:20px;color:var(--acc);margin-top:4px}
+.kc-row{display:flex;gap:4px;flex:none}
+.kc{width:40px;height:40px;min-height:40px;padding:0;flex:none;border:1px solid var(--line2);border-radius:8px;background:var(--bg);color:var(--muted);font-family:var(--mono);font-size:14px;font-weight:500;box-shadow:inset 0 -2px 0 rgba(0,0,0,.4)}
+.kc:hover{background:var(--raised);color:var(--text)}
+.kc.on{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
+.kc.on:hover{background:#f4a057}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:16px;justify-items:center}
+.cal b{font-family:var(--mono);font-size:11px;line-height:16px;font-weight:400;color:var(--muted)}
+.cal i{width:20px;height:20px;border-radius:50%;border:1px solid var(--line2)}
+.cal i.on{border:0;background:radial-gradient(circle,var(--card) 0 2.5px,rgba(237,237,237,.34) 3px)}
+.cal i.today{box-shadow:0 0 0 2px var(--card),0 0 0 3px var(--acc)}
+.cal i.fut{border-color:var(--line);opacity:.4}
+.bar12{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:16px}
+.bar12 i{height:8px;border-radius:2px;background:var(--raised)}
+.bar12 i.win{box-shadow:inset 0 0 0 1px var(--line2);background:repeating-linear-gradient(135deg,rgba(237,237,237,.12) 0 2px,transparent 2px 4px)}
+.bar12 i.past{background:rgba(237,237,237,.34)}
+.bar12 i.cur{background:var(--acc)}
+.bar4{grid-template-columns:repeat(4,1fr)}
+.warn{margin:0;padding:0 0 0 16px;font-size:13px;line-height:20px;color:var(--text2)}
+.warn li{margin-top:8px}
+.sum-prot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;line-height:20px;color:var(--text2)}
+.sum{flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){.bl.pop .pill,.bl.pop .dome,.bl.pop .tear{animation:none}}
 .enter>*{animation:rise .28s var(--ease) both}
 .enter>:nth-child(2){animation-delay:40ms}
 .enter>:nth-child(3){animation-delay:80ms}
@@ -193,7 +256,7 @@ table.nw td,table.nw th{white-space:nowrap}
 <body>
 <header>
   <h1><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle class="mk-t" cx="12" cy="12" r="9"/><circle class="mk-a" id="mkArc" cx="12" cy="12" r="9" transform="rotate(-90 12 12)" stroke-dasharray="56.55" stroke-dashoffset="56.55"/><circle class="mk-h" cx="12" cy="12" r="2.5"/></svg>Gym</h1>
-  <div class="meta" id="weekBadge"></div>
+  <div class="hdr-r"><div class="meta" id="weekBadge"></div><button class="icon" id="setBtn" aria-label="Дані й резервна копія"><span data-ic="database"></span></button></div>
 </header>
 <main id="view"></main>
 <div class="timer" id="timer" hidden>
@@ -206,10 +269,10 @@ table.nw td,table.nw th{white-space:nowrap}
 </div>
 <nav id="nav">
   <button data-tab="workout"><span data-ic="dumbbell"></span>Тренування</button>
+  <button data-tab="supps"><span data-ic="pill"></span>Добавки</button>
   <button data-tab="history"><span data-ic="list"></span>Історія</button>
   <button data-tab="progress"><span data-ic="trending-up"></span>Прогрес</button>
   <button data-tab="body"><span data-ic="scale"></span>Тіло</button>
-  <button data-tab="settings"><span data-ic="database"></span>Дані</button>
 </nav>
 <div id="toast"></div>
 
@@ -265,7 +328,7 @@ function phase(week) {
 }
 
 /* ====== Іконки (lucide) ====== */
-const ICONS = {"calendar": "<path d=\"M8 2v3\"/> <path d=\"M16 2v3\"/> <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/> <path d=\"M3 9h18\"/>", "check": "<path d=\"M20 6 9 17l-5-5\"/>", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\"/> <path d=\"M12 6v6l4 2\"/>", "database": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\"/> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\"/> <path d=\"M3 12A9 3 0 0 0 21 12\"/>", "download": "<path d=\"M12 15V3\"/> <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/> <path d=\"m7 10 5 5 5-5\"/>", "dumbbell": "<path d=\"M17.596 12.768a2 2 0 1 0 2.829-2.829l-1.768-1.767a2 2 0 0 0 2.828-2.829l-2.828-2.828a2 2 0 0 0-2.829 2.828l-1.767-1.768a2 2 0 1 0-2.829 2.829z\"/> <path d=\"m2.5 21.5 1.4-1.4\"/> <path d=\"m20.1 3.9 1.4-1.4\"/> <path d=\"M5.343 21.485a2 2 0 1 0 2.829-2.828l1.767 1.768a2 2 0 1 0 2.829-2.829l-6.364-6.364a2 2 0 1 0-2.829 2.829l1.768 1.767a2 2 0 0 0-2.828 2.829z\"/> <path d=\"m9.6 14.4 4.8-4.8\"/>", "hard-drive-download": "<path d=\"M12 2v8\"/> <path d=\"m16 6-4 4-4-4\"/> <rect width=\"20\" height=\"8\" x=\"2\" y=\"14\" rx=\"2\"/> <path d=\"M6 18h.01\"/> <path d=\"M10 18h.01\"/>", "list": "<path d=\"M3 5h.01\"/> <path d=\"M3 12h.01\"/> <path d=\"M3 19h.01\"/> <path d=\"M8 5h13\"/> <path d=\"M8 12h13\"/> <path d=\"M8 19h13\"/>", "minus": "<path d=\"M5 12h14\"/>", "notebook-pen": "<path d=\"M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4\"/> <path d=\"M2 6h4\"/> <path d=\"M2 10h4\"/> <path d=\"M2 14h4\"/> <path d=\"M2 18h4\"/> <path d=\"M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z\"/>", "pencil": "<path d=\"M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z\"/> <path d=\"m15 5 4 4\"/>", "plus": "<path d=\"M5 12h14\"/> <path d=\"M12 5v14\"/>", "scale": "<path d=\"M12 3v18\"/> <path d=\"m19 8 3 8a5 5 0 0 1-6 0zV7\"/> <path d=\"M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1\"/> <path d=\"m5 8 3 8a5 5 0 0 1-6 0zV7\"/> <path d=\"M7 21h10\"/>", "share": "<path d=\"M12 2v13\"/> <path d=\"m16 6-4-4-4 4\"/> <path d=\"M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8\"/>", "timer": "<line x1=\"10\" x2=\"14\" y1=\"2\" y2=\"2\"/> <line x1=\"12\" x2=\"15\" y1=\"14\" y2=\"11\"/> <circle cx=\"12\" cy=\"14\" r=\"8\"/>", "trash": "<path d=\"M10 11v6\"/> <path d=\"M14 11v6\"/> <path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6\"/> <path d=\"M3 6h18\"/> <path d=\"M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"/>", "trending-up": "<path d=\"M16 7h6v6\"/> <path d=\"m22 7-8.5 8.5-5-5L2 17\"/>", "upload": "<path d=\"M12 3v12\"/> <path d=\"m17 8-5-5-5 5\"/> <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>", "x": "<path d=\"M18 6 6 18\"/> <path d=\"m6 6 12 12\"/>"};
+const ICONS = {"pill": "<path d=\"m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z\"/> <path d=\"m8.5 8.5 7 7\"/>", "chevron-left": "<path d=\"m15 18-6-6 6-6\"/>", "chevron-right": "<path d=\"m9 18 6-6-6-6\"/>", "calendar": "<path d=\"M8 2v3\"/> <path d=\"M16 2v3\"/> <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/> <path d=\"M3 9h18\"/>", "check": "<path d=\"M20 6 9 17l-5-5\"/>", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\"/> <path d=\"M12 6v6l4 2\"/>", "database": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\"/> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\"/> <path d=\"M3 12A9 3 0 0 0 21 12\"/>", "download": "<path d=\"M12 15V3\"/> <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/> <path d=\"m7 10 5 5 5-5\"/>", "dumbbell": "<path d=\"M17.596 12.768a2 2 0 1 0 2.829-2.829l-1.768-1.767a2 2 0 0 0 2.828-2.829l-2.828-2.828a2 2 0 0 0-2.829 2.828l-1.767-1.768a2 2 0 1 0-2.829 2.829z\"/> <path d=\"m2.5 21.5 1.4-1.4\"/> <path d=\"m20.1 3.9 1.4-1.4\"/> <path d=\"M5.343 21.485a2 2 0 1 0 2.829-2.828l1.767 1.768a2 2 0 1 0 2.829-2.829l-6.364-6.364a2 2 0 1 0-2.829 2.829l1.768 1.767a2 2 0 0 0-2.828 2.829z\"/> <path d=\"m9.6 14.4 4.8-4.8\"/>", "hard-drive-download": "<path d=\"M12 2v8\"/> <path d=\"m16 6-4 4-4-4\"/> <rect width=\"20\" height=\"8\" x=\"2\" y=\"14\" rx=\"2\"/> <path d=\"M6 18h.01\"/> <path d=\"M10 18h.01\"/>", "list": "<path d=\"M3 5h.01\"/> <path d=\"M3 12h.01\"/> <path d=\"M3 19h.01\"/> <path d=\"M8 5h13\"/> <path d=\"M8 12h13\"/> <path d=\"M8 19h13\"/>", "minus": "<path d=\"M5 12h14\"/>", "notebook-pen": "<path d=\"M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4\"/> <path d=\"M2 6h4\"/> <path d=\"M2 10h4\"/> <path d=\"M2 14h4\"/> <path d=\"M2 18h4\"/> <path d=\"M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z\"/>", "pencil": "<path d=\"M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z\"/> <path d=\"m15 5 4 4\"/>", "plus": "<path d=\"M5 12h14\"/> <path d=\"M12 5v14\"/>", "scale": "<path d=\"M12 3v18\"/> <path d=\"m19 8 3 8a5 5 0 0 1-6 0zV7\"/> <path d=\"M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1\"/> <path d=\"m5 8 3 8a5 5 0 0 1-6 0zV7\"/> <path d=\"M7 21h10\"/>", "share": "<path d=\"M12 2v13\"/> <path d=\"m16 6-4-4-4 4\"/> <path d=\"M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8\"/>", "timer": "<line x1=\"10\" x2=\"14\" y1=\"2\" y2=\"2\"/> <line x1=\"12\" x2=\"15\" y1=\"14\" y2=\"11\"/> <circle cx=\"12\" cy=\"14\" r=\"8\"/>", "trash": "<path d=\"M10 11v6\"/> <path d=\"M14 11v6\"/> <path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6\"/> <path d=\"M3 6h18\"/> <path d=\"M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"/>", "trending-up": "<path d=\"M16 7h6v6\"/> <path d=\"m22 7-8.5 8.5-5-5L2 17\"/>", "upload": "<path d=\"M12 3v12\"/> <path d=\"m17 8-5-5-5 5\"/> <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>", "x": "<path d=\"M18 6 6 18\"/> <path d=\"m6 6 12 12\"/>"};
 const ic = n => `<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ''}</svg>`;
 document.querySelectorAll('[data-ic]').forEach(el => { el.outerHTML = ic(el.dataset.ic); });
 
@@ -283,10 +346,11 @@ function parseDMY(str) {
   if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
   return `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 }
-// Поле дати у форматі дд.мм.рррр + кнопка календаря (нативний вибір прихований)
-const dateField = (id, iso) => `<div class="datef"><input id="${id}" class="dtext" inputmode="numeric" maxlength="10" placeholder="дд.мм.рррр" value="${dfmt(iso)}" autocomplete="off"><button type="button" data-pick="${id}" aria-label="Відкрити календар">${ic('calendar')}</button><input type="date" class="dpick" data-for="${id}" value="${iso || ''}" tabindex="-1" aria-hidden="true"></div>`;
+// Поле дати дд.мм.рррр + кнопка календаря: прозоре нативне поле лежить поверх кнопки, тож тап відкриває системний вибір дати (iOS, Android, ПК)
+const dateField = (id, iso) => `<div class="datef"><input id="${id}" class="dtext" inputmode="numeric" maxlength="10" placeholder="дд.мм.рррр" value="${dfmt(iso)}" autocomplete="off"><label class="pickbtn" title="Календар">${ic('calendar')}<input type="date" class="dpick" data-for="${id}" value="${iso || ''}" aria-label="Вибрати дату в календарі"></label></div>`;
 const isoOf = id => parseDMY($('#' + id).value);
 const daysBetween = (a, b) => Math.round((pd(b) - pd(a)) / 864e5);
+const addDays = (s, k) => { const d = pd(s); d.setDate(d.getDate() + k); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
 const num = v => { const n = parseFloat(String(v).replace(',', '.')); return isFinite(n) ? n : null; };
 const fmt = n => (Math.round(n * 100) / 100).toString().replace('.', ',');
 const fmtInt = n => Math.round(n).toLocaleString('uk-UA');
@@ -296,7 +360,7 @@ function mondayOf(s) { const d = pd(s); const wd = (d.getDay() + 6) % 7; d.setDa
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2400); }
 
 /* ====== Стан ====== */
-function fresh() { return { version: 1, settings: { startDate: today(), lastExport: null }, workouts: [], body: [] }; }
+function fresh() { return { version: 1, settings: { startDate: today(), lastExport: null }, workouts: [], body: [], supps: {}, suppCfg: { ashwaStart: null, ashwaBreak: null } }; }
 function load() {
   try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.version === 1 && Array.isArray(s.workouts)) return s; } catch (e) {}
   return null;
@@ -304,6 +368,8 @@ function load() {
 let S = load();
 const firstRun = !S;
 if (!S) S = fresh();
+if (!S.supps || typeof S.supps !== 'object') S.supps = {};
+if (!S.suppCfg) S.suppCfg = { ashwaStart: null, ashwaBreak: null };
 function save() {
   try { localStorage.setItem(KEY, JSON.stringify(S)); return true; }
   catch (e) { alert('Не вдалося зберегти дані: ' + e.message); return false; }
@@ -314,6 +380,11 @@ let D = null;
 try { D = JSON.parse(localStorage.getItem(DKEY)); } catch (e) { D = null; }
 function saveDraft() { try { localStorage.setItem(DKEY, JSON.stringify(D)); } catch (e) {} }
 function clearDraft() { D = null; try { localStorage.removeItem(DKEY); } catch (e) {} }
+// Нове тренування завжди отримує сьогоднішню дату: порожня стара чернетка скидається, у заповненій міняється лише дата
+function freshenDraft() {
+  if (!D || D.editId || D.date === today()) return;
+  if (!hasData(D)) clearDraft(); else { D.date = today(); saveDraft(); }
+}
 
 function weekOf(date) { return Math.max(1, Math.floor(daysBetween(S.settings.startDate, date) / 7) + 1); }
 function sortedWorkouts() { return [...S.workouts].sort((a, b) => a.date === b.date ? a.savedAt - b.savedAt : a.date < b.date ? -1 : 1); }
@@ -363,17 +434,18 @@ let tab = 'workout';
 let justSaved = null, sumShown = null;
 function go(t) {
   if (t !== 'history') justSaved = null;
-  tab = t; document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t)); render(); window.scrollTo(0, 0);
+  tab = t; document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t)); $('#setBtn').classList.toggle('on', t === 'settings'); render(); window.scrollTo(0, 0);
   const v = $('#view'); v.classList.remove('enter'); void v.offsetWidth; v.classList.add('enter');
   clearTimeout(go._t); go._t = setTimeout(() => v.classList.remove('enter'), 500);
 }
 $('#nav').addEventListener('click', e => { const b = e.target.closest('button'); if (b) go(b.dataset.tab); });
+$('#setBtn').addEventListener('click', () => go('settings'));
 
 function render() {
   const showTimer = tab === 'workout';
   $('#timer').hidden = !showTimer;
   document.body.classList.toggle('has-timer', showTimer);
-  ({ workout: rWorkout, history: rHistory, progress: rProgress, body: rBody, settings: rSettings })[tab]();
+  ({ workout: rWorkout, supps: rSupps, history: rHistory, progress: rProgress, body: rBody, settings: rSettings })[tab]();
   const wk = weekOf(tab === 'workout' && D ? D.date : today());
   $('#weekBadge').textContent = wk <= 12 ? `Тиждень ${wk} з 12 · ${phase(wk).name}` : phase(wk).name;
   updateSess();
@@ -449,7 +521,7 @@ function todayCard(wk, ph, sug) {
       <div class="plate-wrap">${plate(w, st.frac)}<div class="plate-cap"><span id="sessTxt">${st.done} з ${st.total} підходів</span><br>${e0.slot} · робоча вага</div></div></div>
     ${rack(wk)}
     <div class="field-row"><div><label>Дата</label>${dateField('wDate', D.date)}</div>
-      <div class="sub pad">${D.editId ? 'Редагування збереженого тренування' : sug === D.day ? 'За чергою день ' + sug : 'За чергою був день ' + sug}</div></div></div>`;
+      ${D.date !== today() ? `<div><button data-act="wToday" style="min-height:44px">Сьогодні</button></div>` : `<div class="sub pad">${D.editId ? 'Редагування збереженого тренування' : sug === D.day ? 'За чергою день ' + sug : 'За чергою був день ' + sug}</div>`}</div></div>`;
 }
 // Найкращий розрахунковий 1ПМ вправи в збережених тренуваннях
 function bestE1(id, skip) {
@@ -498,6 +570,10 @@ function rWorkout() {
   $('#view').innerHTML = h;
 }
 
+function onPick(t) {
+  const txt = $('#' + t.dataset.for);
+  if (t.value && txt && parseDMY(txt.value) !== t.value) { txt.value = dfmt(t.value); txt.classList.remove('bad-in'); applyDate(txt.id, t.value); }
+}
 function applyDate(id, iso) {
   if (id === 'wDate' && D && iso !== D.date) { D.date = iso; saveDraft(); render(); }
 }
@@ -511,10 +587,7 @@ $('#view').addEventListener('input', e => {
     if (iso) { const pk = document.querySelector(`.dpick[data-for="${t.id}"]`); if (pk) pk.value = iso; applyDate(t.id, iso); }
     return;
   }
-  if (t.classList.contains('dpick')) {
-    const txt = $('#' + t.dataset.for); if (t.value && txt) { txt.value = dfmt(t.value); txt.classList.remove('bad-in'); applyDate(txt.id, t.value); }
-    return;
-  }
+  if (t.classList.contains('dpick')) { onPick(t); return; }
   if (tab === 'workout' && D) {
     if (t.dataset.slot) {
       const s = D.ex[t.dataset.slot][+t.dataset.i];
@@ -542,9 +615,6 @@ $('#view').addEventListener('change', e => {
 });
 
 $('#view').addEventListener('click', e => {
-  const pb = e.target.closest('[data-pick]');
-  if (pb) { const pk = document.querySelector(`.dpick[data-for="${pb.dataset.pick}"]`); const iso = isoOf(pb.dataset.pick); if (iso) pk.value = iso;
-    try { pk.showPicker(); } catch (err) { pk.focus(); pk.click(); } return; }
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act;
   if (a === 'day') {
@@ -568,10 +638,16 @@ $('#view').addEventListener('click', e => {
   else if (a === 'editW') editWorkout(b.dataset.id);
   else if (a === 'delW') delWorkout(b.dataset.id);
   else if (a === 'saveBody') saveBody();
+  else if (a === 'wToday') applyDate('wDate', today());
+  else if (a === 'sp') toggleSupp(b.dataset.id, b.dataset.v != null ? +b.dataset.v : null);
+  else if (a === 'spDay') { suppDate = b.dataset.d === 'today' ? today() : addDays(suppDate, +b.dataset.d); if (suppDate > today()) suppDate = today(); render(); }
+  else if (a === 'ashwaBreak') { S.suppCfg.ashwaBreak = today(); save(); render(); }
+  else if (a === 'ashwaNew') { S.suppCfg.ashwaBreak = null; S.suppCfg.ashwaStart = null; save(); render(); }
+  else if (a === 'protNow') { setSupp(today(), 'prot', Math.max(1, sday(today()).prot || 0)); render(); toast('Протеїн відмічено'); }
   else if (a === 'delBody') { S.body = S.body.filter(x => x.date !== b.dataset.date); save(); render(); }
   else if (a === 'saveStart') { const v = isoOf('startDate'); if (!v) { toast('Введи дату у форматі дд.мм.рррр'); return; } { S.settings.startDate = v; save(); toast('Дату старту збережено'); render(); } }
 });
-$('#view').addEventListener('change', e => { if (e.target.id === 'pSel') { progSel = e.target.value; render(); } if (e.target.id === 'importFile') importData(e.target.files[0]); });
+$('#view').addEventListener('change', e => { if (e.target.classList.contains('dpick')) onPick(e.target); if (e.target.id === 'pSel') { progSel = e.target.value; render(); } if (e.target.id === 'importFile') importData(e.target.files[0]); });
 
 function saveWorkout() {
   const ex = PROGRAM[D.day].map(e => ({
@@ -588,6 +664,142 @@ function saveWorkout() {
   requestPersist(false);
   justSaved = w.id; sumShown = null;
   go('history');
+}
+
+/* ====== Добавки ====== */
+// Схема з програми: розділ «Добавки (схема прийому)»
+const SUPPS = [
+  { id: 'd3', when: 'am', short: 'D3', name: 'Вітамін D3', brand: 'Perla Helsa · 2000 МО', dose: '1 капсула', note: 'Жиророзчинний, тільки з їжею, де є жири', pill: 'gel', c: ['#ffe9a8', '#e8b02a', '#a8740e'] },
+  { id: 'omega', when: 'am', short: 'Омега-3', name: 'Omega-3 Cod', brand: 'Perla Helsa', dose: 'За етикеткою, зазвичай 2–4 капсули', note: 'На початку їжі, так менше «рибних відрижок»', pill: 'gel', c: ['#f6c37a', '#c97a1c', '#7a430a'] },
+  { id: 'crea', when: 'any', short: 'Креатин', name: 'Креатин', brand: 'GymBeam · Creapure', dose: '3–5 г, капсули за етикеткою', note: 'Щодня, у дні відпочинку теж, зі склянкою води', pill: 'cap', c: ['#fafaf7', '#d6d6d0'] },
+  { id: 'mg', when: 'pm', short: 'Магній', name: 'Triple Magnesium', brand: 'Perla', dose: '2 капсули', note: 'За 1–2 години до сну', pill: 'cap', c: ['#e3ecf2', '#93aec2'] },
+  { id: 'ashwa', when: 'pm', short: 'Ашваганда', name: 'Ашваганда KSM-66', brand: 'GymBeam · 500 мг', dose: '1 капсула', note: 'Курс 8–12 тижнів, потім 2–4 тижні перерви', pill: 'cap', c: ['#c99a70', '#7b4d2c'] }
+];
+const PROT = { id: 'prot', when: 'post', name: 'Протеїн Pure IsoWhey', brand: 'GymBeam', dose: '1 мірна ложка ≈ 30 г, 1–2 рази на день', note: 'Враховуй у денну норму білка 160–190 г' };
+const VITC = { id: 'vitc', when: 'opt', name: 'Вітамін C', brand: 'GymBeam · 1000 мг', dose: '1000 мг', note: 'Не щодня: високі дози антиоксидантів можуть послаблювати адаптацію до тренувань. Краще під час застуди' };
+const WHEN = [
+  { k: 'am', t: 'Зранку або в обід, з їжею', from: 5, to: 15 },
+  { k: 'any', t: 'Будь-коли' },
+  { k: 'post', t: 'Після тренування або як перекус' },
+  { k: 'pm', t: 'Ввечері', from: 18, to: 24 },
+  { k: 'opt', t: 'За потреби' }
+];
+const WD = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота'];
+let suppDate = today(), suppPop = null;
+const sday = d => S.supps[d] || {};
+const ashwaOff = () => !!S.suppCfg.ashwaBreak;
+function setSupp(d, id, v) {
+  const o = { ...sday(d) };
+  if (v) o[id] = v; else delete o[id];
+  if (Object.keys(o).length) S.supps[d] = o; else delete S.supps[d];
+  if (id === 'ashwa' && v) { const st = S.suppCfg.ashwaStart; if (!st || (d < st && daysBetween(d, st) <= 7)) S.suppCfg.ashwaStart = d; }
+  save();
+}
+function toggleSupp(id, v) {
+  const cur = sday(suppDate)[id] || 0;
+  const nv = v == null ? (cur ? 0 : 1) : (cur === v ? v - 1 : v);
+  setSupp(suppDate, id, nv);
+  suppPop = nv && !cur && SUPPS.some(x => x.id === id) ? id : null;
+  if (nv > cur && navigator.vibrate) navigator.vibrate(10);
+  render(); suppPop = null;
+}
+function suppStat(d) {
+  const o = sday(d), list = SUPPS.filter(x => x.id !== 'ashwa' || !ashwaOff());
+  const done = list.filter(x => o[x.id]).length + (o.prot ? 1 : 0);
+  return { done, total: list.length + 1 };
+}
+function streakOf(id) {
+  let d = today(), n = 0;
+  if (!sday(d)[id]) d = addDays(d, -1);
+  while (sday(d)[id]) { n++; d = addDays(d, -1); }
+  return n;
+}
+// Пігулка в бульбашці блістера: м'яка капсула (softgel) або дві половинки желатинової капсули
+function pillArt(x) {
+  const g = `bg-${x.id}`;
+  const pill = x.pill === 'gel'
+    ? `<defs><radialGradient id="${g}" cx="38%" cy="32%" r="80%"><stop offset="0" stop-color="${x.c[0]}"/><stop offset=".55" stop-color="${x.c[1]}"/><stop offset="1" stop-color="${x.c[2]}"/></radialGradient></defs>
+       <g class="pill"><ellipse cx="28" cy="28" rx="13" ry="9" fill="url(#${g})" opacity=".95"/><ellipse cx="23.5" cy="24.5" rx="4.5" ry="2" fill="#fff" opacity=".6"/></g>`
+    : `<g class="pill"><g transform="rotate(-35 28 28)"><rect x="13" y="22" width="30" height="12" rx="6" fill="${x.c[1]}"/><path d="M28 22h9a6 6 0 0 1 0 12h-9z" fill="${x.c[0]}"/><rect x="15" y="24" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".45"/><path d="M28 22v12" stroke="#000" stroke-opacity=".12"/></g></g>`;
+  return `<svg viewBox="0 0 56 56" aria-hidden="true">
+    <circle cx="28" cy="28" r="22" fill="#141415" opacity=".35"/>
+    <g class="tear"><circle cx="28" cy="28" r="21" fill="url(#foilP)" stroke="#000" stroke-opacity=".35"/><path d="M41.6 27.4 L37.5 32.4 L37.9 38.1 L33.5 38.1 L29.6 42.3 L25.0 38.1 L17.4 39.0 L18.4 33.0 L12.4 27.5 L17.7 23.5 L19.7 17.5 L24.7 17.5 L26.8 14.5 L32.2 16.5 L37.6 16.8 L38.5 24.1 Z" fill="#0c0c0d" stroke="#a9a9af" stroke-opacity=".55" stroke-width="1" stroke-linejoin="round"/><path d="M19.4 13.3 L25.9 22.1 L31.1 11.3 Z" fill="url(#foilF)" stroke="#000" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/><path d="M42.5 19.1 L35.1 27.0 L44.7 31.4 Z" fill="url(#foilF)" stroke="#000" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/><path d="M37.7 42.0 L29.0 34.8 L26.6 44.9 Z" fill="url(#foilF)" stroke="#000" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/><path d="M14.6 38.5 L20.7 29.5 L11.0 28.6 Z" fill="url(#foilF)" stroke="#000" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/><path d="M13.0 20.0 L24.7 23.5 L22.7 11.8 Z" fill="url(#foilF)" stroke="#000" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"/></g>
+    ${pill}
+    <g class="dome"><circle cx="28" cy="28" r="22" fill="#fff" fill-opacity=".05" stroke="#fff" stroke-opacity=".2"/><path d="M14 20 A17 17 0 0 1 26 11.5" stroke="#fff" stroke-opacity=".45" stroke-width="2" fill="none" stroke-linecap="round"/></g></svg>`;
+}
+function blister(d) {
+  const o = sday(d);
+  return `<div class="blister" role="group" aria-label="Добавки на день"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <radialGradient id="foilP" cx="50%" cy="50%" r="50%"><stop offset=".55" stop-color="#1f1f21"/><stop offset="1" stop-color="#3a3a3e"/></radialGradient>
+    <linearGradient id="foilF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9c9cf"/><stop offset="1" stop-color="#6c6c72"/></linearGradient></defs></svg>${SUPPS.map(x => {
+    const off = x.id === 'ashwa' && ashwaOff(), on = !!o[x.id];
+    return `<button class="bl${on ? ' taken' : ''}${off ? ' off' : ''}${suppPop === x.id ? ' pop' : ''}" data-act="sp" data-id="${x.id}" aria-pressed="${on}" aria-label="${esc(x.name)}${on ? ', прийнято' : ''}">${pillArt(x)}<span>${off ? 'перерва' : esc(x.short)}</span></button>`; }).join('')}</div>`;
+}
+function suppRow(x, o) {
+  const on = o[x.id] || 0;
+  let ctl, extra = '';
+  if (x.id === 'prot') ctl = `<div class="kc-row">${[1, 2].map(v => `<button class="kc${on >= v ? ' on' : ''}" data-act="sp" data-id="prot" data-v="${v}" aria-label="Порція ${v}" aria-pressed="${on >= v}">${v}</button>`).join('')}</div>`;
+  else if (x.id === 'ashwa' && ashwaOff()) { ctl = `<button class="kc${on ? ' on' : ''}" data-act="sp" data-id="ashwa" aria-pressed="${!!on}" aria-label="Прийнято">${ic('check')}</button>`; extra = `<div class="note">Зараз перерва в курсі</div>`; }
+  else ctl = `<button class="kc${on ? ' on' : ''}" data-act="sp" data-id="${x.id}" aria-pressed="${!!on}" aria-label="Прийнято">${ic('check')}</button>`;
+  if (x.id === 'vitc') {
+    const tr = S.workouts.some(w => w.date === suppDate) || (suppDate === today() && D && !D.editId && hasData(D));
+    if (tr) extra = `<div class="up">У цей день тренування, вітамін C краще пропустити</div>`;
+  }
+  return `<div class="sp-row"><div class="sp-main"><div class="sp-name">${esc(x.name)}</div><div class="meta">${esc(x.brand)}</div>
+    <div class="sp-dose">${esc(x.dose)}</div><div class="note">${esc(x.note)}</div>${extra}</div>${ctl}</div>`;
+}
+function creaCard() {
+  const n = streakOf('crea'), mon = mondayOf(today()), start = addDays(mon, -21), td = today();
+  let cells = '', took = 0, past = 0;
+  for (let i = 0; i < 28; i++) {
+    const d = addDays(start, i), fut = d > td, on = !!sday(d).crea;
+    if (!fut) { past++; if (on) took++; }
+    cells += `<i class="${on ? 'on' : ''}${d === td ? ' today' : ''}${fut ? ' fut' : ''}" title="${dfmt(d)}${on ? ' · прийнято' : ''}"></i>`;
+  }
+  return `<div class="card"><div class="stat-l">Креатин поспіль</div>
+    <div class="stat"><span class="fig">${n}</span><span class="unit">${pl(n, ['день', 'дні', 'днів'])}</span></div>
+    <div class="chg">За 4 тижні ${took} з ${past} ${pl(past, ['дня', 'днів', 'днів'])} · ефект накопичується, пропуски не бажані</div>
+    <div class="cal">${['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'].map(w => `<b>${w}</b>`).join('')}${cells}</div></div>`;
+}
+function ashwaCard() {
+  const c = S.suppCfg, td = today();
+  if (c.ashwaBreak) {
+    const n = daysBetween(c.ashwaBreak, td) + 1, wk = Math.min(4, Math.ceil(n / 7));
+    return `<div class="card"><div class="stat-l">Ашваганда · перерва</div>
+      <div class="stat"><span class="fig">${n}</span><span class="unit">${pl(n, ['день', 'дні', 'днів'])}</span></div>
+      <div class="chg">${n >= 14 ? 'Можна починати новий курс' : 'Рекомендована перерва 14–28 днів'} · з ${dfmt(c.ashwaBreak)}</div>
+      <div class="bar12 bar4">${[1, 2, 3, 4].map(i => `<i class="${i < wk ? 'past' : i === wk ? 'cur' : i >= 2 ? 'win' : ''}"></i>`).join('')}</div>
+      <button class="sm mt12" data-act="ashwaNew">Почати новий курс</button></div>`;
+  }
+  if (!c.ashwaStart) return `<div class="card"><div class="stat-l">Ашваганда · курс</div><div class="sub mt12">Курс почнеться з першої відміченої капсули. Рекомендовано 8–12 тижнів, потім 2–4 тижні перерви</div></div>`;
+  const w = Math.floor(daysBetween(c.ashwaStart, td) / 7) + 1;
+  const msg = w > 12 ? 'Курс довший за 12 тижнів, час на перерву 2–4 тижні' : w > 8 ? 'Можна завершувати курс і робити перерву 2–4 тижні' : `Рекомендовано 8–12 тижнів, до мінімуму ${9 - w} ${pl(9 - w, ['тиждень', 'тижні', 'тижнів'])}`;
+  return `<div class="card"><div class="stat-l">Ашваганда · курс з ${dfmt(c.ashwaStart)}</div>
+    <div class="stat"><span class="fig">${w}</span><span class="unit">тиждень</span></div>
+    <div class="chg"${w > 8 ? ' style="color:var(--acc)"' : ''}>${msg}</div>
+    <div class="bar12">${Array.from({ length: 12 }, (_, i) => { const n = i + 1; return `<i class="${n < w ? 'past' : n === w ? 'cur' : n >= 9 ? 'win' : ''}"></i>`; }).join('')}</div>
+    <div class="rack-l meta"><span>1</span><span>9–12 — можна завершувати</span></div>
+    <button class="sm mt12" data-act="ashwaBreak">Почати перерву</button></div>`;
+}
+function rSupps() {
+  if (suppDate > today()) suppDate = today();
+  const d = suppDate, o = sday(d), st = suppStat(d), isT = d === today(), h = new Date().getHours();
+  let html = `<div class="card"><div class="sp-day"><button class="icon" data-act="spDay" data-d="-1" aria-label="Попередній день">${ic('chevron-left')}</button>
+      <div><div class="meta">${isT ? 'Сьогодні' : WD[pd(d).getDay()]}</div><h3>${dfmt(d)}</h3></div>
+      <button class="icon" data-act="spDay" data-d="1" aria-label="Наступний день"${isT ? ' disabled' : ''}>${ic('chevron-right')}</button></div>
+    ${blister(d)}
+    <div class="sp-sum"><span class="sub">${st.done >= st.total ? 'Усе на цей день прийнято' : `Відмічено ${st.done} з ${st.total}`}${o.prot ? ` · протеїн ${o.prot}×` : ''}</span>${isT ? '' : '<button class="sm" data-act="spDay" data-d="today">Сьогодні</button>'}</div></div>`;
+  for (const g of WHEN) {
+    const items = [...SUPPS, PROT, VITC].filter(x => x.when === g.k);
+    const now = isT && g.from != null && h >= g.from && h < g.to;
+    html += `<div class="sp-g"><h4>${g.t}</h4>${now ? '<span class="meta" style="color:var(--acc)">зараз</span>' : ''}</div><div class="card sp-list">${items.map(x => suppRow(x, o)).join('')}</div>`;
+  }
+  html += creaCard() + ashwaCard();
+  html += `<details class="card"><summary>Застереження</summary><ul class="warn">
+    <li>Ашваганда: одразу припинити, якщо з’явиться жовтизна шкіри чи очей, темна сеча, біль у правому підребер’ї або сильна втома. Не приймати при проблемах із печінкою чи щитоподібною залозою або разом із заспокійливими, снодійними, ліками для щитоподібної залози та імуносупресорами</li>
+    <li>Вітамін D: D3 разом з Omega-3 Cod без аналізу — не більше 4000 МО на добу. Бажано здати аналіз на 25(OH)D і скоригувати дозу</li>
+    <li>Від риб’ячого жиру іноді бувають «рибні відрижки». Допомагає прийом на початку їжі або зберігання капсул у холодильнику</li></ul></details>`;
+  $('#view').innerHTML = html;
 }
 
 /* ====== Історія ====== */
@@ -640,7 +852,8 @@ function summaryCard(w) {
     <div class="stat mt12"><span class="fig" data-count="${Math.round(vol)}">${fmtInt(vol)}</span><span class="unit">кг</span></div>
     ${ref ? `<div class="sub">≈ ${fmt(r1(vol / ref.kg))} × ${esc(ref.n)}, ${tons(ref.kg)}</div>` : ''}
     <div class="sum-row"><span><b>${sets}</b>${pl(sets, ['підхід', 'підходи', 'підходів'])}</span><span><b>${w.ex.length}</b>${pl(w.ex.length, ['вправа', 'вправи', 'вправ'])}</span>${prs ? `<span><b style="color:var(--acc)">${prs}</b>${pl(prs, ['рекорд', 'рекорди', 'рекордів'])}</span>` : ''}</div></div>
-    ${plate('', 1, true)}</div>`;
+    ${plate('', 1, true)}
+    ${w.date === today() ? `<div class="sum-prot" style="flex-basis:100%">${sday(today()).prot ? `<span>Протеїн після тренування відмічено</span>` : `<span>Протеїн після тренування</span><button class="sm" data-act="protNow">Відмітити</button>`}</div>` : ''}</div>`;
 }
 function countUp(el, to) {
   if (!el || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
@@ -783,7 +996,7 @@ function rSettings() {
   $('#view').innerHTML = backupBanner() + `<div class="card"><h3>Старт програми</h3><div class="sub">Від цієї дати рахуються тижні й фази: повернення, основна, розвантаження, інтенсифікація</div>
     <div class="row mt12" style="flex-wrap:nowrap"><div style="flex:1">${dateField('startDate', S.settings.startDate)}</div><button data-act="saveStart" style="min-height:44px">Зберегти</button></div></div>
     <div class="card"><h3>Резервна копія</h3>
-      <div class="meta" style="margin-top:4px">Остання: ${le ? dfmt(le) : 'ще не було'} · тренувань ${S.workouts.length} · записів тіла ${S.body.length} · ≈${size} КБ</div>
+      <div class="meta" style="margin-top:4px">Остання: ${le ? dfmt(le) : 'ще не було'} · тренувань ${S.workouts.length} · записів тіла ${S.body.length} · днів добавок ${Object.keys(S.supps).length} · ≈${size} КБ</div>
       <div class="btn-row"><button class="pri" data-act="export">${ic('download')}Експорт JSON</button>
       ${navigator.canShare ? `<button data-act="share">${ic('share')}Поділитися</button>` : ''}
       <button data-act="import">${ic('upload')}Імпорт</button></div>
@@ -827,7 +1040,8 @@ function importData(file) {
       const d = JSON.parse(r.result);
       if (!d || d.version !== 1 || !Array.isArray(d.workouts) || !Array.isArray(d.body)) throw new Error('Невідомий формат файлу');
       if (!confirm(`У файлі: ${d.workouts.length} тренувань, ${d.body.length} записів тіла.\nЗамінити поточні дані (${S.workouts.length} тренувань)?`)) return;
-      S = { version: 1, settings: { startDate: d.settings?.startDate || S.settings.startDate, lastExport: d.settings?.lastExport || null }, workouts: d.workouts, body: d.body };
+      S = { version: 1, settings: { startDate: d.settings?.startDate || S.settings.startDate, lastExport: d.settings?.lastExport || null }, workouts: d.workouts, body: d.body,
+        supps: d.supps && typeof d.supps === 'object' ? d.supps : {}, suppCfg: d.suppCfg || { ashwaStart: null, ashwaBreak: null } };
       save(); toast('Дані відновлено'); render();
     } catch (e) { alert('Помилка імпорту: ' + e.message); }
   };
@@ -860,7 +1074,19 @@ $('#timer').addEventListener('click', e => {
 });
 
 /* ====== Старт ====== */
-window.addEventListener('storage', ev => { if (ev.key === KEY) { S = load() || S; render(); } });
+window.addEventListener('storage', ev => { if (ev.key === KEY) { S = load() || S; if (!S.supps) S.supps = {}; if (!S.suppCfg) S.suppCfg = { ashwaStart: null, ashwaBreak: null }; render(); } });
+// Якщо застосунок відкрили наступного дня (або він висів у фоні після півночі), дати оновлюються на сьогодні
+let dayStamp = today();
+function onWake() {
+  if (dayStamp === today()) return;
+  const old = dayStamp; dayStamp = today();
+  freshenDraft(); if (suppDate === old) suppDate = dayStamp;
+  render();
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) onWake(); });
+window.addEventListener('pageshow', onWake);
+window.addEventListener('focus', onWake);
+freshenDraft();
 go('workout');
 </script>
 </body>
